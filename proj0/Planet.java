@@ -90,4 +90,9 @@ public class Planet {
         xxPos += xxVel*sec;
         yyPos += yyVel*sec;
     }
+
+    public void draw(){
+        StdDraw.picture(xxPos, yyPos, imgFileName);
+        StdDraw.show();
+    }
 }
