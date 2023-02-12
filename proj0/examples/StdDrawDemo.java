@@ -10,14 +10,13 @@
  */
 
 public class StdDrawDemo {
-	public static String imageToDraw = "advice.png";
+	public static String imageToDraw = "earth.gif";
 
 	/* Draws three copies of the image in a rectangular pattern. */
 	public static void drawThree() {
 		/** Sets up the universe so it goes from 
 		  * -100, -100 up to 100, 100 */
 		StdDraw.setScale(-100, 100);
-
 		/* Clears the drawing window. */
 		StdDraw.clear();
 
@@ -28,7 +27,7 @@ public class StdDrawDemo {
 
 		/* Shows the drawing to the screen, and waits 2000 milliseconds. */
 		StdDraw.show();
-		StdDraw.pause(2000);		
+		StdDraw.pause(2);		
 	}
 
 	/* Draws random copies of the image, clearing in between
@@ -95,9 +94,9 @@ public class StdDrawDemo {
 	}
 
 	public static void main(String[] args) {
-		
+	
 		drawThree();
-		drawRandom();
-		drawZoom();
+		//drawRandom();
+		//drawZoom();
 	}
 } 
