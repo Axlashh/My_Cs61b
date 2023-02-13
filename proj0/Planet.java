@@ -47,16 +47,14 @@ public class Planet {
     public double calcForceExertedByX(Planet p){
         double force = this.calcForceExertedBy(p);
         double dis = this.calcDistance(p);
-        double ans = force*(xxPos - p.xxPos)/dis;
-        if(ans < 0) ans = -ans;
+        double ans = force*(p.xxPos - xxPos)/dis;
         return ans;
     }
 
     public double calcForceExertedByY(Planet p){
         double force = this.calcForceExertedBy(p);
         double dis = this.calcDistance(p);
-        double ans = force*(yyPos - p.yyPos)/dis;
-        if(ans < 0) ans = -ans;
+        double ans = force*(p.yyPos - yyPos)/dis;
         return ans;
     }
 
@@ -64,22 +62,18 @@ public class Planet {
         double ans = 0;
         for(Planet iter : p){
             if(this.equals(iter)) continue;
-            int i = 1;
-            if(this.xxPos<iter.xxPos) i = -1;
-            ans += i*calcForceExertedByX(iter);
+            ans += calcForceExertedByX(iter);
         }
-        return Math.abs(ans);
+        return ans;
     }
 
     public double calcNetForceExertedByY(Planet[] p){
         double ans = 0;
         for(Planet iter : p){
             if(this.equals(iter)) continue;
-            int i = 1;
-            if(this.yyPos<iter.yyPos) i = -1;
-            ans += i*calcForceExertedByY(iter);
+            ans += calcForceExertedByY(iter);
         }
-        return Math.abs(ans);
+        return ans;
     }
 
     public void update(double sec,double x,double y){
