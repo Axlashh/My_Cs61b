@@ -65,7 +65,7 @@ public class NBody {
         return ans;
     }
 
-    public static void enableDoubleBuffering(){
+    private static void enableDoubleBuffering(){
         StdDraw.enableDoubleBuffering();
     }
 }
