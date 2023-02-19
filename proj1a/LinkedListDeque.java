@@ -13,16 +13,6 @@ public class LinkedListDeque<T> {
     private int len;
     private Node lld;
 
-    public LinkedListDeque(LinkedListDeque other) {
-        T k = null;
-        lld = new Node<>(k, null, null);
-        len = 0;
-        int l = other.size();
-        for (int i = 0; i < l; i += 1) {
-            this.addLast((T) other.get(i + 1));
-        }
-    }
-
     public LinkedListDeque() {
         T k = null;
         lld = new Node<T>(k, null, null);
@@ -57,17 +47,17 @@ public class LinkedListDeque<T> {
     }
 
     public void addFirst(T item) {
-        Node temp = new Node<>(item, lld.next, lld);
+        Node temp = new Node<>(item, lld, lld.next);
         lld.next = temp;
         temp.next.prev = temp;
         len += 1;
     }    
 
     public T removeLast() {
-        T ret = (T) lld.prev.element;
-        if (len <= 0) {
-            System.out.println("Error!");
+        if (len == 0) {
+            return null;
         }
+        T ret = (T) lld.prev.element;
         len -= 1;
         lld.prev.prev.next = lld;
         lld.prev = lld.prev.prev;
@@ -75,15 +65,16 @@ public class LinkedListDeque<T> {
     }
 
     public T removeFirst() {
-        T ret = (T) lld.next.element;
-        if (len <= 0) {
-            System.out.println("Error!");
+        if (len == 0) {
+            return null;
         }
+        T ret = (T) lld.next.element;
         len -= 1;
         lld.next.next.prev = lld;
         lld.next = lld.next.next;
         return ret;
     }
+
     public T get(int i) {
         if (i > len) {
             System.out.println("Error!");

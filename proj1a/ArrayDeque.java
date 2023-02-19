@@ -15,7 +15,7 @@ public class ArrayDeque<T> {
         T[] temp = (T[]) new Object[n];
         int k = len - prev;
         System.arraycopy(temp, 0, arr, prev, k);
-        System.arraycopy(temp, k + 1, arr, 0, clen - k);
+        System.arraycopy(temp, k, arr, 0, clen - k);
         len = n;
         clen = n / 2;
         rear = clen;
