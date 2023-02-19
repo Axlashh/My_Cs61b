@@ -80,7 +80,7 @@ public class LinkedListDeque<T> {
             System.out.println("Error!");
         }
         Node temp = lld;
-        for (int j = 0; j < i; j += 1) {
+        for (int j = 0; j <= i; j += 1) {
             temp = temp.next;
         }
         return (T) temp.element;
