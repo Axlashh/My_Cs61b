@@ -101,7 +101,7 @@ public class LinkedListDeque<T> {
 
     private T helper(int index, Node no) {
         if (index == 0) {
-            return no.element;
+            return (T) no.element;
         }
         return helper(index - 1, no.next);
     }

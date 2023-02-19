@@ -27,8 +27,7 @@ public class ArrayDeque<T> {
         T[] temp = (T[]) new Object[n];
         if (prev < rear) {
             System.arraycopy(temp, 0, arr, prev % len, n);
-        }
-        else {
+        } else {
             System.arraycopy(temp, 0, arr, prev, len - prev);
             System.arraycopy(temp, len - prev, arr, 0, clen - len + prev);
         }
