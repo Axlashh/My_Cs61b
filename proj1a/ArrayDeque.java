@@ -11,16 +11,32 @@ public class ArrayDeque<T> {
         prev = 0;
     }
 
-    private void resize(int n) {
+    private void resizeb(int n) {
         T[] temp = (T[]) new Object[n];
         int k = len - prev;
         System.arraycopy(temp, 0, arr, prev, k);
         System.arraycopy(temp, k + 1, arr, 0, clen - k);
         len = n;
-        rear = len - 1;
+        clen = n / 2;
+        rear = clen;
         prev = len;
         arr = temp;
-        clen = n / 2;
+    }
+
+    private void resizes(int n) {
+        T[] temp = (T[]) new Object[n];
+        if (prev < rear) {
+            System.arraycopy(temp, 0, arr, prev % len, n);
+        }
+        else {
+            System.arraycopy(temp, 0, arr, prev, len - prev);
+            System.arraycopy(temp, len - prev, arr, 0, clen - len + prev);
+        }
+        len = n;
+        clen = n;
+        prev = 0;
+        rear = 0;
+        arr = temp;
     }
 
     public int size() {
@@ -33,7 +49,7 @@ public class ArrayDeque<T> {
 
     public void addFirst(T item) {
         if (clen == len) {
-            resize(2 * len);
+            resizeb(2 * len);
         }
         if (prev == 0) {
             prev = len;
@@ -45,7 +61,7 @@ public class ArrayDeque<T> {
 
     public void addLast(T item) {
         if (clen == len) {
-            resize(2 * len);
+            resizeb(2 * len);
         }
         arr[rear] = item;
         if (rear == len - 1) {
@@ -58,7 +74,7 @@ public class ArrayDeque<T> {
     public T removeFirst() {
         if (!isEmpty()) {
             if (len > 8 && clen <= len / 2) {
-                resize(len / 2);
+                resizes(len / 2);
             }       
             T ret = arr[prev];
             arr[prev] = null;
@@ -72,7 +88,7 @@ public class ArrayDeque<T> {
     public T removeLast() {
         if (!isEmpty()) {
             if (len > 8 && clen <= len / 2) {
-                resize(len / 2);
+                resizes(len / 2);
             }
             rear = (rear - 1) % len;
             T ret = arr[rear];
