@@ -88,7 +88,7 @@ public class ArrayDeque<T> {
             if (len > 8 && clen <= len / 2) {
                 resizes(len / 2);
             }
-            rear = (rear - 1) % len;
+            rear = (rear - 1 + len) % len;
             T ret = arr[rear];
             arr[rear] = null;
             clen -= 1;
