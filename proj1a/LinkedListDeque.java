@@ -95,6 +95,17 @@ public class LinkedListDeque<T> {
         return (T) temp.element;
     }
 
+    public T getRecursive(int index) {
+        return helper(index, lld.next);
+    }
+
+    private T helper(int index, Node no) {
+        if (index == 0) {
+            return no.element;
+        }
+        return helper(index - 1, no.next);
+    }
+
     public int size() {
         return len;
     }
