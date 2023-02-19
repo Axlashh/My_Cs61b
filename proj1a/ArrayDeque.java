@@ -14,8 +14,8 @@ public class ArrayDeque<T> {
     private void resizeb(int n) {
         T[] temp = (T[]) new Object[n];
         int k = len - prev;
-        System.arraycopy(temp, 0, arr, prev, k);
-        System.arraycopy(temp, k, arr, 0, clen - k);
+        System.arraycopy(arr, prev, temp, 0, k);
+        System.arraycopy(arr, 0, temp, k, clen - k);
         len = n;
         clen = n / 2;
         rear = clen;
@@ -26,10 +26,10 @@ public class ArrayDeque<T> {
     private void resizes(int n) {
         T[] temp = (T[]) new Object[n];
         if (prev < rear) {
-            System.arraycopy(temp, 0, arr, prev % len, clen);
+            System.arraycopy(arr, prev % len, temp, 0,  clen);
         } else {
-            System.arraycopy(temp, 0, arr, prev, len - prev);
-            System.arraycopy(temp, len - prev, arr, 0, clen - len + prev);
+            System.arraycopy(arr, prev, temp, 0, len - prev);
+            System.arraycopy(arr, 0, temp, len - prev, clen - len + prev);
         }
         len = n;
         prev = 0;
