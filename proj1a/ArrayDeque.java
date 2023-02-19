@@ -56,25 +56,31 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
-        if (len > 8 && clen <= len / 2) {
-            resize(len / 2);
-        }       
-        T ret = arr[prev];
-        arr[prev] = null;
-        prev = (prev + 1) % len;
-        clen -= 1;
-        return ret;
+        if (!isEmpty()) {
+            if (len > 8 && clen <= len / 2) {
+                resize(len / 2);
+            }       
+            T ret = arr[prev];
+            arr[prev] = null;
+            prev = (prev + 1) % len;
+            clen -= 1;
+            return ret;
+        }
+        return null;
     }
 
     public T removeLast() {
-        if (len > 8 && clen <= len / 2) {
-            resize(len / 2);
+        if (!isEmpty()) {
+            if (len > 8 && clen <= len / 2) {
+                resize(len / 2);
+            }
+            rear = (rear - 1) % len;
+            T ret = arr[rear];
+            arr[rear] = null;
+            clen -= 1;
+            return ret;
         }
-        rear = (rear - 1) % len;
-        T ret = arr[rear];
-        arr[rear] = null;
-        clen -= 1;
-        return ret;
+        return null;
     }
 
     public boolean isEmpty() {
