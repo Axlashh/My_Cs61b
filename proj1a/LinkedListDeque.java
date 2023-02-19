@@ -1,12 +1,12 @@
 public class LinkedListDeque<T> {
-    private class Node<T> {
+    private static class Node<T> {
         Node prev;
         Node next;
         T element;
         public Node(T a, Node nprev, Node nnext) {
-           element = a;
-           prev = nprev;
-           next = nnext; 
+            element = a;
+            prev = nprev;
+            next = nnext; 
         }
     }
 
@@ -15,7 +15,7 @@ public class LinkedListDeque<T> {
 
     public LinkedListDeque(LinkedListDeque other) {
         T k = null;
-        lld = new Node<T>(k, null, null);
+        lld = new Node<>(k, null, null);
         len = 0;
         int l = other.size();
         for (int i = 0; i < l; i += 1) {
@@ -32,7 +32,7 @@ public class LinkedListDeque<T> {
     }
 
     public boolean isEmpty() {
-        if(len == 0) {
+        if (len == 0) {
             return true;
         }
         return false;
@@ -50,21 +50,21 @@ public class LinkedListDeque<T> {
     }
 
     public void addLast(T a) {
-        Node temp = new Node<T>(a, lld.prev, lld);
+        Node temp = new Node<>(a, lld.prev, lld);
         lld.prev = temp;
         temp.prev.next = temp;
         len += 1;
     }
 
     public void addFirst(T item) {
-        Node temp = new Node<T>(item, lld.next, lld);
+        Node temp = new Node<>(item, lld.next, lld);
         lld.next = temp;
         temp.next.prev = temp;
         len += 1;
     }    
 
     public T removeLast() {
-        T ret =(T) lld.prev.element;
+        T ret = (T) lld.prev.element;
         if (len <= 0) {
             System.out.println("Error!");
         }
@@ -75,7 +75,7 @@ public class LinkedListDeque<T> {
     }
 
     public T removeFirst() {
-        T ret =(T) lld.next.element;
+        T ret = (T) lld.next.element;
         if (len <= 0) {
             System.out.println("Error!");
         }

@@ -48,7 +48,7 @@ public class ArrayDeque<T> {
             resize(2 * len);
         }
         arr[rear] = item;
-        if (rear == len-1) {
+        if (rear == len - 1) {
             rear = -1;
         }
         rear += 1;
@@ -56,8 +56,8 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
-        if (len > 8 && clen <= len/2) {
-           resize(len / 2);
+        if (len > 8 && clen <= len / 2) {
+            resize(len / 2);
         }       
         T ret = arr[prev];
         arr[prev] = null;
@@ -73,6 +73,7 @@ public class ArrayDeque<T> {
         rear = (rear - 1) % len;
         T ret = arr[rear];
         arr[rear] = null;
+        clen -= 1;
         return ret;
     }
 
