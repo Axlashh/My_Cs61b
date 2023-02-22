@@ -25,8 +25,7 @@ public class IntList {
         rest = rest0;
     }
 
-
-    public static IntList reverse(IntList L){
+    public static IntList reverse(IntList L) {
         if (L == null) {
             return null;
         }
@@ -39,6 +38,7 @@ public class IntList {
             te = te.rest;
         }
         te.rest = IntList.of(L.first);
+        L = ne;
         return ne;
     }
 

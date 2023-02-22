@@ -24,7 +24,7 @@ public class IntListTest {
         IntList iL = L;
         IntList aL = IntList.reverse(L);
         assertEquals(rL,aL);
-        assertNotEquals(iL,aL);
+        assertNotEquals(L,aL);
 
         IntList N = null;
         IntList rN = IntList.reverse(N);
