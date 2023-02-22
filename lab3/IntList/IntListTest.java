@@ -1,4 +1,7 @@
+
 import static org.junit.Assert.*;
+
+import java.beans.Transient;
 
 import org.junit.Test;
 
@@ -9,6 +12,24 @@ public class IntListTest {
      * method. The main point of this is to convince you that
      * assertEquals knows how to handle IntLists just fine.
      */
+
+    public static void main(String[] args){
+        jh61b.junit.TestRunner.runTests("all", IntListTest.class);
+    }
+
+    @Test
+    public void testReverse() {
+        IntList L = IntList.of(0,1,2,3);
+        IntList rL = IntList.of(3,2,1,0);
+        IntList iL = L;
+        IntList aL = IntList.reverse(L);
+        assertEquals(rL,aL);
+        assertNotEquals(iL,aL);
+
+        IntList N = null;
+        IntList rN = IntList.reverse(N);
+        assertEquals(IntList.of(),rN);
+    }
 
     @Test
     public void testList() {
