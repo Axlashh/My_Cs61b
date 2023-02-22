@@ -25,21 +25,15 @@ public class IntList {
         rest = rest0;
     }
 
-    public static IntList reverse(IntList L) {
-        if (L == null) {
-            return null;
+    public static IntList reverse(IntList A) {
+
+        if (A == null || A.rest == null) {
+            return A;
         }
-        if (L.rest == null) {
-            return new IntList(L.first,null);
-        }
-        IntList ne = IntList.reverse(L.rest);
-        IntList te = ne;
-        while (te.rest != null) {
-            te = te.rest;
-        }
-        te.rest = IntList.of(L.first);
-        L = ne;
-        return ne;
+        IntList reversed = reverse(A.rest);
+        A.rest.rest = A;
+        A.rest = null;
+        return reversed;
     }
 
     /**
