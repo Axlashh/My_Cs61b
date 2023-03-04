@@ -140,7 +140,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             }
             a.key = p.key;
             a.value = p.value;
-            p = null;
+            p = p.left;
         }
         return ret;
     }
