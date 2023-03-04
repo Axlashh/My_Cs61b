@@ -86,6 +86,19 @@ public class TestBSTMap {
         assertTrue(b.get("hi") != null);
     }
 
+    @Test
+    public void sanityRemoveTest() {
+        BSTMap<String, Integer> b = new BSTMap<>();
+        b.put("b", 2);
+        b.put("a", 1);
+        b.put("c", 3);
+        b.put("d", 4);
+        b.remove("b");
+        b.remove("a");
+        b.remove("c");
+        assertTrue(4 == b.get("d"));
+    }
+
     public static void main(String[] args) {
         jh61b.junit.TestRunner.runTests(TestBSTMap.class);
     }
