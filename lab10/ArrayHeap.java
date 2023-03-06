@@ -124,7 +124,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             return;
         }
         int h = min(leftIndex(index), rightIndex(index));
-        if(!inBounds(index)) {
+        if(!inBounds(h)) {
             return;
         }
         swap(index, h);
