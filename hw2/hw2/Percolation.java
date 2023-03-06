@@ -4,7 +4,6 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
 
-    private boolean isPercolation;
     private final int size;
     private WeightedQuickUnionUF map;
     private int onum;
@@ -14,15 +13,14 @@ public class Percolation {
             throw new IllegalArgumentException("N must be positive!");
         }
         omap = new boolean[N][N];
-        for (int i = 0; i < N; i += 1) {
-            for (int j = 0; j < N; j += 1) {
-                omap[i][j] = false;
-            }
-        }
-        map = new WeightedQuickUnionUF(N * N);
+        int k = N * N;
+        map = new WeightedQuickUnionUF(k  + 2);
         onum = 0;
         size = N;
-        isPercolation = false;
+        for (int i = 0; i < N; i += 1) {
+            map.union(pos(0, i), k);
+            map.union(pos(N - 1, i), k + 1);
+        }
     }
 
     private int pos(int row, int col) {
@@ -33,17 +31,23 @@ public class Percolation {
         if (row < 0 || row >= size || col < 0 || col >= size) {
             throw new IndexOutOfBoundsException("Cant open !");
         }
-        if (isOpen(row, col)) return;
+        if (isOpen(row, col)) {
+            return;
+        }
         onum += 1;
         omap[row][col] = true;
-        if (row + 1 < size && isOpen(row + 1, col))
+        if (row + 1 < size && isOpen(row + 1, col)) {
             map.union(pos(row + 1, col), pos(row, col));
-        if (row - 1 >= 0 && isOpen(row - 1, col))
+        }
+        if (row - 1 >= 0 && isOpen(row - 1, col)) {
             map.union(pos(row - 1, col), pos(row, col));
-        if (col + 1 < size && isOpen(row, col + 1))
+        }
+        if (col + 1 < size && isOpen(row, col + 1)) {
             map.union(pos(row, col + 1), pos(row, col));
-        if (col - 1 >= 0 && isOpen(row, col - 1))
+        }
+        if (col - 1 >= 0 && isOpen(row, col - 1)){
             map.union(pos(row, col - 1), pos(row, col));
+        }
     }
 
     public boolean isOpen(int row, int col) {
@@ -57,12 +61,11 @@ public class Percolation {
         if (row < 0 || row >= size || col < 0 || col >= size) {
             throw new IndexOutOfBoundsException("Cant isFull!");
         }
-        if (!isOpen(row, col)) return false;
-        for (int i = 0; i < size; i += 1) {
-            if (map.connected(pos(row, col), pos(0, i)) || isPercolation && map.connected(pos(row, col), pos(size - 1, i)))
-                return true;
+        if (!isOpen(row, col)){
+            return false;
         }
-        return false;
+        return map.connected(pos(row, col), size * size)
+            || percolates() && map.connected(pos(row, col), size * size + 1);
     }
 
     public int numberOfOpenSites() {
@@ -70,14 +73,7 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        int row = size - 1;
-        for (int i = 0; i < size; i += 1) {
-            if (isFull(row, i)) {
-                isPercolation = true;
-                return true;
-            }
-        }
-        return false;
+        return map.connected(size * size, size * size + 1);
     }
 
     public static void main(String[] args) {
