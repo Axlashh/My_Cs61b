@@ -45,7 +45,7 @@ public class Percolation {
         if (col + 1 < size && isOpen(row, col + 1)) {
             map.union(pos(row, col + 1), pos(row, col));
         }
-        if (col - 1 >= 0 && isOpen(row, col - 1)){
+        if (col - 1 >= 0 && isOpen(row, col - 1)) {
             map.union(pos(row, col - 1), pos(row, col));
         }
     }
@@ -61,7 +61,7 @@ public class Percolation {
         if (row < 0 || row >= size || col < 0 || col >= size) {
             throw new IndexOutOfBoundsException("Cant isFull!");
         }
-        if (!isOpen(row, col)){
+        if (!isOpen(row, col)) {
             return false;
         }
         return map.connected(pos(row, col), size * size)
@@ -73,6 +73,9 @@ public class Percolation {
     }
 
     public boolean percolates() {
+        if (size == 1) {
+            return isOpen(0, 0);
+        }
         return map.connected(size * size, size * size + 1);
     }
 

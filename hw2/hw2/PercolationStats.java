@@ -34,8 +34,8 @@ public class PercolationStats {
             k += Math.pow((i - mean), 2);
         }
         stddev = Math.sqrt((k / (T - 1)));
-        confidenceLow = mean - (1.96 / Math.sqrt(T));
-        confidenceHigh = mean + (1.96 / Math.sqrt(T));
+        confidenceLow = mean - (1.96 * stddev / Math.sqrt(T));
+        confidenceHigh = mean + (1.96 * stddev / Math.sqrt(T));
     }
 
 
