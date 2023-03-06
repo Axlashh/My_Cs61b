@@ -4,6 +4,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
 
+    private boolean isPercolation;
     private final int size;
     private WeightedQuickUnionUF map;
     private int onum;
@@ -21,9 +22,10 @@ public class Percolation {
         map = new WeightedQuickUnionUF(N * N);
         onum = 0;
         size = N;
+        isPercolation = false;
     }
 
-    public int pos(int row, int col) {
+    private int pos(int row, int col) {
         return row * size + col;
     }
 
@@ -31,6 +33,7 @@ public class Percolation {
         if (row < 0 || row >= size || col < 0 || col >= size) {
             throw new IndexOutOfBoundsException("Cant open !");
         }
+        if (isOpen(row, col)) return;
         onum += 1;
         omap[row][col] = true;
         if (row + 1 < size && isOpen(row + 1, col))
@@ -56,7 +59,7 @@ public class Percolation {
         }
         if (!isOpen(row, col)) return false;
         for (int i = 0; i < size; i += 1) {
-            if (map.connected(pos(row, col), pos(0, i)))
+            if (map.connected(pos(row, col), pos(0, i)) || isPercolation && map.connected(pos(row, col), pos(size - 1, i)))
                 return true;
         }
         return false;
@@ -70,9 +73,13 @@ public class Percolation {
         int row = size - 1;
         for (int i = 0; i < size; i += 1) {
             if (isFull(row, i)) {
+                isPercolation = true;
                 return true;
             }
         }
         return false;
+    }
+
+    public static void main(String[] args) {
     }
 }

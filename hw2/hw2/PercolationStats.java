@@ -13,14 +13,13 @@ public class PercolationStats {
         if (N <= 0 || T <= 0) {
             throw new IllegalArgumentException();
         }
-        double[] data = new double[N];
+        double[] data = new double[T];
         for (int i = 0; i < T; i += 1) {
             Percolation test = pf.make(N);
             Random r = new Random();
             while (!test.percolates()) {
                 int row = r.nextInt(N);
                 int col = r.nextInt(N);
-                if (test.isOpen(row, col)) continue;
                 test.open(row, col);
             }
             data[i] = (double)test.numberOfOpenSites() / (double)(N * N);
