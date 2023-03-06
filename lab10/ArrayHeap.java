@@ -120,17 +120,17 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        if (isLast(index) || min(index, leftIndex(index)) == index && min(index, rightIndex(index)) == index) {
+        if (min(index, leftIndex(index)) == index && min(index, rightIndex(index)) == index) {
             return;
         }
         int h = min(leftIndex(index), rightIndex(index));
+        if(!inBounds(index)) {
+            return;
+        }
         swap(index, h);
         sink(h);
     }
 
-    private boolean isLast(int index) {
-        return getNode(leftIndex(index)) == null && getNode(rightIndex(index)) == null;
-    }
 
     /**
      * Inserts an item with the given priority value. This is enqueue, or offer.
