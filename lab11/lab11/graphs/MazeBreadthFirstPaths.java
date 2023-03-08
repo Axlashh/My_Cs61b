@@ -24,6 +24,7 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
         q = new LinkedList<>();
         q.add(s);
         distTo[s] = 0;
+        edgeTo[s] = s;
         marked[s] = true;
     }
 
