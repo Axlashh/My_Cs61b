@@ -1,5 +1,8 @@
 package hw4.puzzle;
 import org.junit.Test;
+
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
 
 public class TestBoard {
@@ -23,5 +26,9 @@ public class TestBoard {
 
         x[1][1] = 1000;
         assertEquals("Your Board class is mutable and you should be making a copy of the values in the passed tiles array. Please see the FAQ!", 3, b.tileAt(1, 1));
+
+        Iterable<WorldState> a = b.neighbors();
+        Iterator p = a.iterator();
+        System.out.print(p.hasNext());
     }
 } 

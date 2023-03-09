@@ -1,5 +1,6 @@
 package hw4.puzzle;
 
+import java.util.Comparator;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -80,7 +81,7 @@ public class Word implements WorldState {
             }
         }
         return neighbs;
-    }
+}
 
     @Override
     public int estimatedDistanceToGoal() {
