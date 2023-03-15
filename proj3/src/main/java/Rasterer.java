@@ -41,11 +41,51 @@ public class Rasterer {
      * "query_success" : Boolean, whether the query was able to successfully complete; don't
      *                    forget to set this to true on success! <br>
      */
+
+
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-        // System.out.println(params);
+        System.out.println(params);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
-                           + "your browser.");
+        double ulrlon = params.get("lrlon");
+        double uullon = params.get("ullon");
+        double uullat = params.get("ullat");
+        double ulrlat = params.get("lrlat");
+        if (ulrlon < MapServer.ROOT_ULLON || uullon > MapServer.ROOT_LRLON
+            || uullat < MapServer.ROOT_LRLAT || ulrlat > MapServer.ROOT_ULLAT) {
+            results.put("query_success", false);
+            return results;
+        }
+        double uLonDPP = (ulrlon - uullon) / params.get("w");
+        double LonDPP = (MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / MapServer.TILE_SIZE;
+        int layer = 0;
+        for ( ; layer < 7; layer += 1) {
+            if (LonDPP < uLonDPP) {
+                break;
+            }
+            LonDPP /= 2;
+        }
+        double LonUNIT = LonDPP;
+        double LatUNIT = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / (Math.pow(2, layer) * MapServer.TILE_SIZE);
+        int raster_ulx = (int) ((uullon - MapServer.ROOT_ULLON) / (LonUNIT * MapServer.TILE_SIZE));
+        int raster_lrx = (int) ((ulrlon - MapServer.ROOT_ULLON) / (LonUNIT * MapServer.TILE_SIZE));
+        int raster_uly = (int) ((MapServer.ROOT_ULLAT - uullat) / (LatUNIT * MapServer.TILE_SIZE));
+        int raster_lry = (int) ((MapServer.ROOT_ULLAT - ulrlat) / (LatUNIT * MapServer.TILE_SIZE));
+        results.put("raster_ul_lon", raster_ulx * LonUNIT * MapServer.TILE_SIZE + MapServer.ROOT_ULLON);
+        results.put("raster_lr_lon", (raster_lrx + 1) * LonUNIT * MapServer.TILE_SIZE + MapServer.ROOT_ULLON);
+        results.put("raster_ul_lat", - raster_uly * LatUNIT * MapServer.TILE_SIZE + MapServer.ROOT_ULLAT);
+        results.put("raster_lr_lat", - (raster_lry + 1) * LatUNIT * MapServer.TILE_SIZE + MapServer.ROOT_ULLAT);
+        int nx = raster_lrx - raster_ulx + 1;
+        int ny = raster_lry - raster_uly + 1;
+        String[][] render_grid = new String[ny][nx];
+        for (int i = raster_uly; i <= raster_lry; i += 1) {
+            for (int j = raster_ulx; j <= raster_lrx; j += 1) {
+                render_grid[i - raster_uly][j - raster_ulx] = "d" + layer + "_x" + j + "_y" + i + ".png";
+            }
+        }
+        results.put("render_grid", render_grid);
+        results.put("query_success", true);
+        results.put("depth", layer);
+
         return results;
     }
 

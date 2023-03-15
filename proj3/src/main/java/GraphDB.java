@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -26,6 +26,71 @@ public class GraphDB {
      * You do not need to modify this constructor, but you're welcome to do so.
      * @param dbPath Path to the XML file to be parsed.
      */
+
+    private Map<Long, Node> Nodes = new HashMap<>();
+    private Map<String, Way> Ways = new HashMap<>();
+
+    static class Node {
+        private long id;
+        private double longitude;
+        private double latitude;
+        private String name;
+        private Set<Long> neighbors;
+
+        public Node(String id, String longitude, String latitude) {
+            this.id = Long.parseLong(id);
+            this.longitude = Double.parseDouble(longitude);
+            this.latitude = Double.parseDouble(latitude);
+            neighbors = new HashSet<>();
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public void addNeighbor(Long nodeId) {
+            neighbors.add(nodeId);
+        }
+
+        public boolean isConnected() {
+            return neighbors.size() != 0;
+        }
+    }
+
+    static class Way {
+        private List<Node> nodes;
+        private String id;
+        private String roadType;
+        private String name;
+
+        public Way(String id) {
+            this.id = id;
+            nodes = new ArrayList<>();
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setRoadType(String roadType) {
+            this.roadType = roadType;
+        }
+
+        public void addNode(Node node) {
+            nodes.add(node);
+        }
+
+        public String getId() {
+            return id;
+        }
+
+    }
+
+
     public GraphDB(String dbPath) {
         try {
             File inputFile = new File(dbPath);
@@ -41,6 +106,18 @@ public class GraphDB {
         }
         clean();
     }
+
+     public void addNode(Node node) {
+        Nodes.put(node.getId(), node);
+     }
+
+     public void addWay(Way way) {
+        Ways.put(way.getId(), way);
+     }
+
+     public Node getNode(Long id) {
+        return Nodes.get(id);
+     }
 
     /**
      * Helper to process strings into their "cleaned" form, ignoring punctuation and capitalization.
@@ -58,6 +135,19 @@ public class GraphDB {
      */
     private void clean() {
         // TODO: Your code here.
+        Iterator<Node> t = Nodes.values().iterator();
+        Set<Node> de = new HashSet<>();
+        for (Iterator<Node> it = t; it.hasNext(); ) {
+            Node i = it.next();
+            if (i.isConnected() == false) {
+                de.add(i);
+            }
+        }
+        for (Iterator<Node> it = de.iterator(); it.hasNext(); ) {
+            Node i = it.next();
+            Nodes.remove(i.id);
+        }
+        de = null;
     }
 
     /**
@@ -66,7 +156,11 @@ public class GraphDB {
      */
     Iterable<Long> vertices() {
         //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
+        List<Long> ret = new ArrayList<>();
+        for (Iterator<Node> i = Nodes.values().iterator(); i.hasNext(); ) {
+            ret.add(i.next().id);
+        }
+        return ret;
     }
 
     /**
@@ -75,7 +169,8 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        return null;
+        Set<Long> ret = Nodes.get(v).neighbors;
+        return ret;
     }
 
     /**
@@ -136,7 +231,17 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        return 0;
+        long ret = -1;
+        double dis = 0;
+        for (Iterator<Node> it = Nodes.values().iterator(); it.hasNext(); ) {
+            Node a = it.next();
+            double temp = distance(a.longitude, a.latitude, lon, lat);
+            if (ret == -1 || temp < dis) {
+                ret = a.getId();
+                dis = temp;
+            }
+        }
+        return ret;
     }
 
     /**
@@ -145,7 +250,8 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        return 0;
+        Node a = Nodes.get(v);
+        return a.longitude;
     }
 
     /**
@@ -154,6 +260,7 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        return 0;
+        Node a = Nodes.get(v);
+        return a.latitude;
     }
 }

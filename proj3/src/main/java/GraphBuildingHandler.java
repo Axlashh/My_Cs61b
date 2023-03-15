@@ -2,9 +2,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  *  Parses OSM XML files using an XML SAX parser. Used to construct the graph of roads for
@@ -37,6 +35,10 @@ public class GraphBuildingHandler extends DefaultHandler {
                     "residential", "living_street", "motorway_link", "trunk_link", "primary_link",
                     "secondary_link", "tertiary_link"));
     private String activeState = "";
+    private GraphDB.Node tnode;
+    private GraphDB.Way tway;
+    private boolean isWayValid = false;
+    private List<GraphDB.Node> pc = new ArrayList<>();
     private final GraphDB g;
 
     /**
@@ -68,20 +70,19 @@ public class GraphBuildingHandler extends DefaultHandler {
         if (qName.equals("node")) {
             /* We encountered a new <node...> tag. */
             activeState = "node";
-//            System.out.println("Node id: " + attributes.getValue("id"));
-//            System.out.println("Node lon: " + attributes.getValue("lon"));
-//            System.out.println("Node lat: " + attributes.getValue("lat"));
-
-            /* TODO Use the above information to save a "node" to somewhere. */
-            /* Hint: A graph-like structure would be nice. */
+            tnode = new GraphDB.Node(attributes.getValue("id"),
+                    attributes.getValue("lon"), attributes.getValue("lat"));
 
         } else if (qName.equals("way")) {
             /* We encountered a new <way...> tag. */
             activeState = "way";
-//            System.out.println("Beginning a way...");
+            tway = new GraphDB.Way(attributes.getValue("id"));
         } else if (activeState.equals("way") && qName.equals("nd")) {
             /* While looking at a way, we found a <nd...> tag. */
             //System.out.println("Id of a node in this way: " + attributes.getValue("ref"));
+            GraphDB.Node a = g.getNode(Long.parseLong(attributes.getValue("ref")));
+            tway.addNode(a);
+            pc.add(a);
 
             /* TODO Use the above id to make "possible" connections between the nodes in this way */
             /* Hint1: It would be useful to remember what was the last node in this way. */
@@ -95,24 +96,24 @@ public class GraphBuildingHandler extends DefaultHandler {
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");
             if (k.equals("maxspeed")) {
-                //System.out.println("Max Speed: " + v);
                 /* TODO set the max speed of the "current way" here. */
             } else if (k.equals("highway")) {
-                //System.out.println("Highway type: " + v);
+                if (ALLOWED_HIGHWAY_TYPES.contains(v)) {
+                    isWayValid = true;
+                    tway.setRoadType(v);
+                }
                 /* TODO Figure out whether this way and its connections are valid. */
-                /* Hint: Setting a "flag" is good enough! */
             } else if (k.equals("name")) {
-                //System.out.println("Way Name: " + v);
+                tway.setName(v);
             }
 //            System.out.println("Tag with k=" + k + ", v=" + v + ".");
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
                 .equals("name")) {
-            /* While looking at a node, we found a <tag...> with k="name". */
+            tnode.setName(attributes.getValue("v"));
             /* TODO Create a location. */
             /* Hint: Since we found this <tag...> INSIDE a node, we should probably remember which
             node this tag belongs to. Remember XML is parsed top-to-bottom, so probably it's the
             last node that you looked at (check the first if-case). */
-//            System.out.println("Node's name: " + attributes.getValue("v"));
         }
     }
 
@@ -134,6 +135,25 @@ public class GraphBuildingHandler extends DefaultHandler {
             /* Hint1: If you have stored the possible connections for this way, here's your
             chance to actually connect the nodes together if the way is valid. */
 //            System.out.println("Finishing a way...");
+            if (isWayValid) {
+                GraphDB.Node lastNode = null;
+                for (GraphDB.Node i : pc) {
+                    if (lastNode == null) {
+                        lastNode = i;
+                        continue;
+                    }
+                    lastNode.addNeighbor(i.getId());
+                    i.addNeighbor(lastNode.getId());
+                    lastNode = i;
+                }
+                pc = new ArrayList<>();
+                tway = null;
+                tnode = null;
+                isWayValid = false;
+            }
+        } else if (tnode != null){
+            g.addNode(tnode);
+            tnode = null;
         }
     }
 

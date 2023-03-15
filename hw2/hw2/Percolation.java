@@ -80,5 +80,13 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
+        Percolation a = new Percolation(3);
+        a.open(0, 2);
+        a.open(1, 2);
+        a.open(2, 2);
+        a.open(2, 0);
+        a.open(1, 0);
+        a.open(0, 0);
+        System.out.print(a.isFull(0, 2));
     }
 }
