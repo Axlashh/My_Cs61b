@@ -44,6 +44,12 @@ public class GraphDB {
             neighbors = new HashSet<>();
         }
 
+        public double getLongitude() {
+            return longitude;
+        }
+        public double getLatitude() {
+            return latitude;
+        }
         public void setName(String name) {
             this.name = name;
         }

@@ -1,5 +1,6 @@
-import java.util.List;
-import java.util.Objects;
+import org.eclipse.jetty.io.IdleTimeout;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +13,33 @@ import java.util.regex.Pattern;
  * down to the priority you use to order your vertices.
  */
 public class Router {
+
+    private static class AstarNode implements Comparable<AstarNode> {
+        private long Node;
+        private AstarNode lastNode;
+        private double distanceFromStart;
+        private double priority;
+
+        public AstarNode(long Node, AstarNode lastNode, double distanceFromStart) {
+            this.Node = Node;
+            this.lastNode = lastNode;
+            this.distanceFromStart = distanceFromStart;
+            this.priority = graph.distance(Node, destinationNode) + distanceFromStart;
+        }
+
+        @Override
+        public int compareTo(AstarNode a) {
+            if (priority > a.priority) {
+                return 1;
+            } else if (priority < a.priority) {
+                return -1;
+            }
+            return 0;
+        }
+    }
+    private static long destinationNode;
+    private static GraphDB graph;
+
     /**
      * Return a List of longs representing the shortest path from the node
      * closest to a start location and the node closest to the destination
@@ -25,7 +53,33 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        long start = g.getNode(g.closest(stlon, stlat)).getId();
+        destinationNode = g.getNode(g.closest(destlon, destlat)).getId();
+        graph = g;
+        PriorityQueue<AstarNode> pq = new PriorityQueue<>();
+        Map<Long, Boolean> mark = new HashMap<>();
+        pq.add(new AstarNode(start, null, 0));
+        AstarNode finalNode = null;
+        while (true) {
+            AstarNode cur = pq.remove();
+            if (cur.Node == destinationNode) {
+                finalNode = cur;
+                break;
+            }
+            mark.put(cur.Node, true);
+            for (long i : g.adjacent(cur.Node)) {
+                if (!mark.getOrDefault(i, false)) {
+                    pq.add(new AstarNode(i, cur, cur.distanceFromStart + g.distance(cur.Node, i)));
+                }
+            }
+        }
+        List<Long> ret = new ArrayList<>();
+        while (finalNode != null) {
+            ret.add(finalNode.Node);
+            finalNode = finalNode.lastNode;
+        }
+        Collections.reverse(ret);
+        return ret;
     }
 
     /**
