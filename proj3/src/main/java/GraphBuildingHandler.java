@@ -72,11 +72,12 @@ public class GraphBuildingHandler extends DefaultHandler {
             activeState = "node";
             tnode = new GraphDB.Node(attributes.getValue("id"),
                     attributes.getValue("lon"), attributes.getValue("lat"));
+            g.addNode(tnode);
 
         } else if (qName.equals("way")) {
             /* We encountered a new <way...> tag. */
             activeState = "way";
-            tway = new GraphDB.Way(attributes.getValue("id"));
+            tway = new GraphDB.Way(Long.parseLong(attributes.getValue("id")));
         } else if (activeState.equals("way") && qName.equals("nd")) {
             /* While looking at a way, we found a <nd...> tag. */
             //System.out.println("Id of a node in this way: " + attributes.getValue("ref"));
@@ -146,14 +147,13 @@ public class GraphBuildingHandler extends DefaultHandler {
                     i.addNeighbor(lastNode.getId());
                     lastNode = i;
                 }
-                pc = new ArrayList<>();
-                tway = null;
-                tnode = null;
-                isWayValid = false;
+                g.addWay(tway);
             }
-        } else if (tnode != null){
-            g.addNode(tnode);
+            pc = new ArrayList<>();
+            tway = null;
             tnode = null;
+            isWayValid = false;
+            activeState = "";
         }
     }
 

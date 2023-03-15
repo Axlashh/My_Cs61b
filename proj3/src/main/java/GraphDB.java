@@ -28,7 +28,7 @@ public class GraphDB {
      */
 
     private Map<Long, Node> Nodes = new HashMap<>();
-    private Map<String, Way> Ways = new HashMap<>();
+    private Map<Long, Way> Ways = new HashMap<>();
 
     static class Node {
         private long id;
@@ -63,11 +63,11 @@ public class GraphDB {
 
     static class Way {
         private List<Node> nodes;
-        private String id;
+        private long id;
         private String roadType;
         private String name;
 
-        public Way(String id) {
+        public Way(long id) {
             this.id = id;
             nodes = new ArrayList<>();
         }
@@ -84,7 +84,7 @@ public class GraphDB {
             nodes.add(node);
         }
 
-        public String getId() {
+        public long getId() {
             return id;
         }
 
